@@ -3,27 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>  <!-- Telegram WebApp SDK -->
+    <title>Telegram Clicker Game</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
             text-align: center;
-            padding: 20px;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background: #0088cc;
+        
+        .container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .counter {
+            font-size: 5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .click-btn {
+            background: #FF9500;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            font-size: 1.5rem;
+            font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+            outline: none;
+        }
+        
+        .click-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stats {
+            margin-top: 20px;
+            font-size: 1.2rem;
         }
     </style>
 </head>
 <body>
-    <h1>Привет, это Mini App!</h1>
-    <button onclick="alert('Кнопка не работает!')">Нерабочая кнопка</button>
+    <div class="container">
+        <h1>🔥 Тапалка 🔥</h1>
+        <div class="counter" id="counter">0</div>
+        <button class="click-btn" id="clickBtn">КЛИК!</button>
+        <div class="stats">
+            <div>Рекорд: <span id="record">0</span></div>
+        </div>
+    </div>
+
+    <script>
+        let count = 0;
+        let record = localStorage.getItem('clickRecord') || 0;
+        
+        const counter = document.getElementById('counter');
+        const clickBtn = document.getElementById('clickBtn');
+        const recordEl = document.getElementById('record');
+        
+        recordEl.textContent = record;
+        
+        clickBtn.addEventListener('click', () => {
+            count++;
+            counter.textContent = count;
+            
+            if (count > record) {
+                record = count;
+                recordEl.textContent = record;
+                localStorage.setItem('clickRecord', record);
+            }
+            
+            // Анимация
+            counter.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                counter.style.transform = 'scale(1)';
+            }, 100);
+        });
+        
+        // Инициализация Telegram WebApp
+        Telegram.WebApp.expand();
+        Telegram.WebApp.enableClosingConfirmation();
+    </script>
 </body>
 </html>
